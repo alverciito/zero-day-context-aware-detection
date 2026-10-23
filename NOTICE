@@ -1,0 +1,103 @@
+kitnetzday - companion code of JISAS-D-26-02300
+"Towards Context-Aware Detection: Evaluating Multi-Autoencoder
+Ensembles for Zero-Day Network Intrusion Detection"
+
+This package contains code derived from third-party software. The notices
+below are reproduced as their licences require. No third-party dataset is
+redistributed here.
+
+
+1. Kitsune-py (KitNET)
+----------------------
+
+Source:  https://github.com/ymirsky/Kitsune-py
+Paper:   Y. Mirsky, T. Doitshman, Y. Elovici and A. Shabtai, "Kitsune: An
+         Ensemble of Autoencoders for Online Network Intrusion Detection",
+         Network and Distributed System Security Symposium (NDSS), 2018.
+
+Two files of frozen/models/ are adapted from Kitsune-py:
+
+  frozen/models/cluster/corrclust.py
+      adapted from KitNET/corClust.py (the incremental correlation
+      clustering of the feature mapper).
+  frozen/models/networks/original_kitsune.py
+      adapted from KitNET/dA.py (the denoising autoencoder, its online
+      min-max normalisation and its train/execute interface).
+
+In addition, frozen/runner/baselines_t5.py imports Kitsune-py unmodified,
+at commit 7c8ea51e89268d9a20399dca4bf32d663e638eb4, to run the published
+implementation as a baseline. Kitsune-py itself is not shipped in this
+package.
+
+The files of frozen/ are shipped without their comments. KitNET/corClust.py
+carries the licence below under its own notice, "Copyright (c) 2017 Yisroel
+Mirsky", and asks in a comment that the paper above be cited; both apply to
+frozen/models/cluster/corrclust.py and are reproduced here.
+
+Kitsune-py is distributed under the MIT License:
+
+    MIT License
+
+    Copyright (c) 2018 Yisroel mirsky
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+
+2. Denoising autoencoder by Yusuke Sugomori
+-------------------------------------------
+
+Source:  https://github.com/yusugomori/DeepLearning
+
+KitNET/dA.py of Kitsune-py states that portions of it are adapted from
+Yusuke Sugomori's code, and carries the notice below. It therefore also
+applies to frozen/models/networks/original_kitsune.py.
+
+    Copyright (c) 2017 Yusuke Sugomori
+
+    MIT License
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+    LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+3. Datasets
+-----------
+
+The package ships derived quantities only (metrics, cut indices, file
+hashes and per-column variances of the benign training stretch), never
+records of the datasets. The four corpora are obtained from their
+publishers under their own terms: the Kitsune Network Attack Dataset,
+ACI-IoT-2023, CIC-IDS2017 and CSE-CIC-IDS2018. data/streams.json lists
+the files that were read, with their sizes and sha256.

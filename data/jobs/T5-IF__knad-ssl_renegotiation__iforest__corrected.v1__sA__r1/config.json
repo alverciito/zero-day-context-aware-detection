@@ -1,0 +1,319 @@
+{
+  "schema": "jisa-baselines-t5/1",
+  "baselines_t5_version": "1.1.0",
+  "job_id": "T5-IF__knad-ssl_renegotiation__iforest__corrected.v1__sA__r1",
+  "manifest_row": {
+    "job_id": "T5-IF__knad-ssl_renegotiation__iforest__corrected.v1__sA__r1",
+    "block": "T5-IF",
+    "priority": "NA",
+    "dataset": "KNAD:SSL_Renegotiation",
+    "variant": "iforest",
+    "ar": "",
+    "paradigm": "NA",
+    "pipeline": "corrected",
+    "pipeline_version": "v1",
+    "window": "NA",
+    "k_clusters": "NA",
+    "grouping": "NA",
+    "partition_seed": "NA",
+    "contamination": "0",
+    "seed": "A",
+    "rep": "1",
+    "save_ckpt": "False",
+    "timing_ref": "False",
+    "notes": "linea base T5 (analysis_plan.md §7.5): NO esta en manifest.csv; la produce baselines_t5.py"
+  },
+  "manifest_path": "NA (linea base T5: no esta en manifest.csv)",
+  "spec": {
+    "job_id": "T5-IF__knad-ssl_renegotiation__iforest__corrected.v1__sA__r1",
+    "block": "T5-IF",
+    "family": "T5",
+    "dataset": "KNAD:SSL_Renegotiation",
+    "kind": "knad",
+    "variant": "iforest",
+    "pipeline": "corrected",
+    "pipeline_version": "v1",
+    "seed": "A",
+    "seed_int": 1234,
+    "rep": 1,
+    "mode": "full"
+  },
+  "mode": "full",
+  "test_mode": false,
+  "smoke": false,
+  "seed_label": "A",
+  "seed_int": 1234,
+  "code": {
+    "script": "revision/experiments/baselines_t5.py",
+    "sha256": "026137238c75943af42188b23501e021c0ee9aa74d6325008f69415e7c0777e7",
+    "common_sha256": "f4cb96e34ec03f7501207d113604f81773559b91fb37b404ffc5bc6d109aaa81",
+    "run_job_sha256": "cf7d6000b5b5d527b5ab90372df4e0cbc22ad686fa7f5db5653c6cb6d1311ad3",
+    "main_repo": ".",
+    "head": "03acfe7c872174ef2cf6ae17d8276b79c7354cda",
+    "tags_at_head": [],
+    "runner_tag": null,
+    "note": "las regiones vienen de run_job.regions_for sin modificar; el modelo NO es el del articulo: es una linea base de T5"
+  },
+  "results_root": "results/revision",
+  "started": "2026-09-29T23:00:50",
+  "host": "acid137",
+  "pid": 1770527,
+  "device": "/CPU:0",
+  "hyperparameters_frozen": {
+    "fm": 50000,
+    "ad": 150000,
+    "L": null,
+    "k": null,
+    "source": {
+      "fm": 50000,
+      "ad": 150000,
+      "T": 200000,
+      "source": "common.CORRECTED_TRAIN_ROWS + fm congelado (50.000)",
+      "reference_job": {
+        "job": "T1-A-KNAD__knad-ssl_renegotiation__conv1d__arF__corrected.v1__L800__k4__sA__r1",
+        "fm": 50000,
+        "ad": 150000,
+        "done": true
+      },
+      "checked_against_reference": true,
+      "rule": "job T1 con DONE del mismo dataset, T1-A preferido (T5-3)"
+    }
+  },
+  "model": {
+    "estimator": "sklearn.ensemble.IsolationForest",
+    "params": {
+      "n_estimators": 100,
+      "max_samples": "auto",
+      "contamination": "auto",
+      "max_features": 1.0,
+      "bootstrap": false,
+      "n_jobs": 1,
+      "random_state": 1234
+    },
+    "max_samples_": 256,
+    "n_features_in_": 115,
+    "offset_": -0.5,
+    "fit_rows": [
+      0,
+      200000
+    ],
+    "score": "-score_samples(x) (mayor = mas anomalo; plan §7.5.1)",
+    "chunk_rows": 200000,
+    "nonfinite_input": {
+      "rule": "NaN -> 0; +-inf -> maximo finito de la columna en [0, T) (0.0 si no hay ninguno), como pipelines.corrected_preprocess",
+      "fit_rows_0_T": {
+        "n_nan": 0,
+        "n_inf": 0
+      },
+      "scored_rows_0_N": {
+        "n_nan": 0,
+        "n_inf": 0
+      },
+      "columns_without_finite_train_values": [],
+      "no_op": true
+    }
+  },
+  "cache": {
+    "key": "knad-ssl_renegotiation__corrected__v1",
+    "path": "data/cache/streams/knad-ssl_renegotiation__corrected__v1",
+    "pipeline": "corrected",
+    "pipeline_version": "v1",
+    "semantics": "x = pd.read_csv(dataset, header=None).to_numpy() (m filas, 115 columnas); y = pd.read_csv(labels)['x'] (m filas), alineadas fila a fila; entrenamiento [0, 200000) = FM [0, 50000) + AE [50000, 200000) validado con etiquetas como 100 % benigno (solo aserción; el tramo se fija a priori); tramo posterior al entrenamiento post_train = [200000, m), que NO es una region de evaluacion (los pares calib/eval disjuntos estan en config.json.regions.detector_protocol_candidates); orden de captura sin reordenar.",
+    "x": {
+      "shape": [
+        2207571,
+        115
+      ],
+      "dtype": "float64",
+      "fortran_order": true,
+      "sha256": "97637ab1a43ffdea31691527041b0333594cd3976702a453783fef8c7a9d9652"
+    },
+    "y": {
+      "shape": [
+        2207571
+      ],
+      "dtype": "int64",
+      "sha256": "c0d9ac5da5ae502d41b9d8aaeccf19df8e2942bdb95a7b7c1ed978ee7ee36ca5"
+    },
+    "sha256_verified": true,
+    "read_only": "la cache es de solo lectura; baselines_t5.py no escribe nada en ella",
+    "sha256_verify_seconds": 0.9,
+    "aux": {}
+  },
+  "regions": {
+    "units": "indices de fila del stream (0-based, semiabiertos)",
+    "n_rows": 2207571,
+    "fm": [
+      0,
+      50000
+    ],
+    "ae_train": [
+      50000,
+      200000
+    ],
+    "execution": [
+      200000,
+      2207571
+    ],
+    "train": [
+      0,
+      200000
+    ],
+    "post_train": [
+      200000,
+      2207571
+    ],
+    "train_benign_check": {
+      "rows": [
+        0,
+        200000
+      ],
+      "n_attack": 0,
+      "passed": true,
+      "note": "las etiquetas solo validan un tramo fijado a priori; no seleccionan filas"
+    },
+    "first_attack_index": 1320011,
+    "detector_protocol_candidates": {
+      "_contract": "El runner NO fija la referencia del detector ni la region evaluada (la fija analysis_plan.md). Cada candidata es un PAR (calib, eval) disjunto. aggregate.py/metrics_rev.py DEBEN tomar calib y eval de UNA candidata con common.check_protocol_regions(regions, <candidata>), que exige calib ∩ eval = ∅ y eval ∩ train = ∅; nunca combinar la calib de una candidata con la eval de otra. 'post_train' NO es una region de evaluacion. Las candidatas regression_only (post-proceso tal como se envio) solo sirven para la regresion interna X2. Si la candidata trae eval_exclude o el job t4e_training_contamination (T4-E), la evaluacion son los SEGMENTOS que devuelve check_protocol_regions(..., with_exclusions=True); la referencia c = 0 usa extra_eval_exclude con common.t4e_eval_exclusion(dataset). F_cal excluye los duplicados de fit_set_exclusion (plan §2.1).",
+      "calib_first_05pct_post_train": {
+        "calib": [
+          200000,
+          300378
+        ],
+        "eval": [
+          300378,
+          2207571
+        ],
+        "calib_in_sample": false,
+        "calib_uses_labels": false,
+        "regression_only": false,
+        "note": "calibracion sin etiquetas con el primer 5 % del tramo posterior al entrenamiento (en coordenadas del modelo desde el final del entrenamiento); la evaluacion empieza DESPUES de la calibracion"
+      },
+      "calib_first_10pct_post_train": {
+        "calib": [
+          200000,
+          400757
+        ],
+        "eval": [
+          400757,
+          2207571
+        ],
+        "calib_in_sample": false,
+        "calib_uses_labels": false,
+        "regression_only": false,
+        "note": "calibracion sin etiquetas con el primer 10 % del tramo posterior al entrenamiento (en coordenadas del modelo desde el final del entrenamiento); la evaluacion empieza DESPUES de la calibracion"
+      },
+      "calib_first_20pct_post_train": {
+        "calib": [
+          200000,
+          601514
+        ],
+        "eval": [
+          601514,
+          2207571
+        ],
+        "calib_in_sample": false,
+        "calib_uses_labels": false,
+        "regression_only": false,
+        "note": "calibracion sin etiquetas con el primer 20 % del tramo posterior al entrenamiento (en coordenadas del modelo desde el final del entrenamiento); la evaluacion empieza DESPUES de la calibracion"
+      },
+      "calib_in_sample_train_tail": {
+        "calib": [
+          100000,
+          200000
+        ],
+        "eval": [
+          200000,
+          2207571
+        ],
+        "calib_in_sample": true,
+        "calib_uses_labels": false,
+        "regression_only": false,
+        "note": "misma referencia que el post-proceso enviado ([100k, 200k)), pero evaluando solo [fm+ad, n). Scores IN-SAMPLE por partida doble: los AEs se entrenaron con esas filas y la capa stat se ajusto con esos mismos errores (kitnet.py:176-185); en las redes con ventana el error de entrenamiento usa relleno circular (conv1d.py:184-188). Distribucion benigna optimista: NO es la referencia primaria salvo que analysis_plan.md lo fije y lo declare"
+      }
+    },
+    "fit_set_exclusion": {
+      "rule": "F_cal = filas de la calibracion SIN las marcadas como duplicado exacto de una fila de [0, T) (analysis_plan.md §2.1; los duplicados siguen en el stream, en las ventanas y en E)",
+      "required": true,
+      "fail_closed": "metrics_rev.py no ajusta nada si no obtiene la mascara",
+      "mask": null,
+      "status": "la cache KNAD corrected v1 no guarda la mascara (T0: 0 duplicados en los 6 streams; plan_support/label_counts.json calib.dup_of_train_rows)",
+      "how": "pipelines.train_duplicate_mask(x, T, warmup_audit.hash_matrix) sobre x de la cache"
+    }
+  },
+  "score_row_semantics": "score[i] corresponde a la fila i del stream; ninguna linea base de T5 usa ventana",
+  "scores_summary": {
+    "n": 2207571,
+    "n_nan": 0,
+    "n_inf": 0,
+    "nan_is_result": true
+  },
+  "labels_note": "labels.npy se copia de y.npy de la cache SIN usarla: ningun objeto de este job se ajusta con etiquetas (las lee solo metrics_rev al evaluar)",
+  "plan": {
+    "section": "analysis_plan.md §7.5",
+    "role": "linea base descriptiva, fuera de las familias y de H1-H4",
+    "tag": "[SENSIBILIDAD plan §7.5]"
+  },
+  "differences_declared": {
+    "common": {
+      "T5-1 features": "Ninguna linea base re-extrae paquetes: ambas consumen la matriz de features de la cache del stream (x.npy), que es EXACTAMENTE la que recibe el modelo del articulo. En KNAD son las 115 features AfterImage del CSV publicado con el dataset Kitsune (sin preprocesar: KitNET normaliza 0-1 por su cuenta); en CIC/ACI son las features ya preprocesadas por pipelines.corrected_preprocess (fillna 0, +-inf -> maximo finito de [0, T), z-score con media y desviacion de [0, T)), es decir, ajustadas SOLO con el tramo de entrenamiento.",
+      "T5-2 protocolo": "Mismas regiones que el runner (run_job.regions_for sin modificar): entrenamiento [0, T) = FM [0, fm) + AE [fm, T); calibracion y evaluacion las fija metrics_rev con check_protocol_regions sobre la candidata del plan. Ningun objeto de estas lineas base ve etiquetas ni filas posteriores a T.",
+      "T5-3 post-proceso": "KMD/MVD/fusion/P99/metricas NO se calculan aqui: los aplica metrics_rev.py sobre scores.npy, igual que en T1-T4.",
+      "T5-5 S-INS asimetrica": "La sensibilidad S-INS (calibrar en [fm + ad/3, T), filas in-sample) NO significa lo mismo en T5-IF que en el resto: en T1-T4 y en T5-KitNET esas filas llevan el error prequencial del modelo que se esta entrenando en ese momento, mientras que el Isolation Forest las puntua con el bosque YA AJUSTADO sobre [0, T) completo. La distribucion de calibracion de T5-IF es por construccion mas estrecha y optimista, baja el umbral P99 y cambia el recall. Consecuencia operativa: el S-INS de T5-IF solo vale como diagnostico interno de esa linea base; NO se compara con el S-INS de T1-T4 ni de T5-KitNET, y cualquier tabla que los ponga juntos tiene que decirlo en el pie. Producir un score out-of-fold sobre [fm, T) para T5-IF seria la alternativa, y no esta en el plan §7.5."
+    },
+    "iforest": {
+      "T5-IF-1 ajuste": "IsolationForest se ajusta con las filas [0, T) completas; max_samples='auto' = min(256, n) submuestras por arbol, como en el plan. Sin etiquetas.",
+      "T5-IF-2 score": "score = -score_samples(x) para TODAS las filas del stream (plan §7.5.1). No se aplica log10(1 + s): esa transformacion pertenece al pipeline de KitNET (kitnet.py:323) y el plan no la pide para IF. Las filas [0, T) se puntuan tambien (in-sample, declarado): el protocolo principal solo usa [T, N), y la sensibilidad S-INS del plan necesita [fm, T).",
+      "T5-IF-3 no finitos": "IsolationForest no admite NaN/inf. Se reproduce el ORDEN exacto de pipelines.corrected_preprocess, ajustado solo con [0, T): primero NaN -> 0 y DESPUES el maximo finito de la columna en [0, T) (que por tanto incluye esos ceros), que es el relleno de +-inf; si tras eso la columna no tiene ningun valor finito en [0, T), el relleno es 0.0. El orden importa: con el orden inverso, una columna cuyos unicos valores finitos de [0, T) fueran negativos y que ademas tuviera NaN daria un relleno negativo en vez de 0.0. Los recuentos van en config.json (nonfinite_input). En los 9 streams medidos es un no-op (n_nan = n_inf = 0).",
+      "T5-IF-4 determinismo": "n_jobs = 1 y random_state = semilla del plan (A 1234, B 5678, C 9012): el score no depende del numero de threads ni del tamano de chunk (se comprueba en --selfcheck).",
+      "T5-IF-5 sin ventana": "IF puntua cada fila por separado: no hay ventana L ni paradigma AR/TSR. En manifest_row, window y k_clusters valen 'NA' y ar queda vacio."
+    }
+  },
+  "provenance": {
+    "env": {
+      "lock": "revision/env/postproc.lock.txt",
+      "expected": {
+        "numpy": "1.26.4",
+        "pandas": "2.2.3",
+        "scikit-learn": "1.6.1",
+        "scipy": "1.15.1",
+        "threadpoolctl": "3.6.0"
+      },
+      "matches_lock": true
+    },
+    "plan": {
+      "tag": "analysis-plan-frozen",
+      "plan_commit": "ab072b589a53f23dbfdd38ff96b250e9cb37fccb",
+      "tag_object": "d2a79d8817659036e4da4b82ca0c1c88931889fa",
+      "tag_commit_time": "2026-09-16T12:15:29+02:00",
+      "plan_sha256": "f65830b5029614758e784fba0bee33b8b1d3cf3c212d53c0b0d883d30ebdaf89",
+      "plan_sha256_worktree": "f65830b5029614758e784fba0bee33b8b1d3cf3c212d53c0b0d883d30ebdaf89",
+      "plan_sha256_decisions_md": "f65830b5029614758e784fba0bee33b8b1d3cf3c212d53c0b0d883d30ebdaf89",
+      "check": "R-7 OK (tag, copia de trabajo y registro coinciden)"
+    },
+    "versions": {
+      "python": "3.12.14",
+      "executable": "envs/postproc/bin/python",
+      "numpy": "1.26.4",
+      "scipy": "1.15.1",
+      "sklearn": "1.6.1",
+      "pandas": "2.2.3",
+      "threadpoolctl": "3.6.0"
+    },
+    "threads_env": {
+      "OMP_NUM_THREADS": "6",
+      "OPENBLAS_NUM_THREADS": "4",
+      "MKL_NUM_THREADS": "4"
+    },
+    "started": "2026-09-29T23:00:50"
+  },
+  "outputs": [
+    "arrays.json",
+    "config.json",
+    "DONE",
+    "env.json",
+    "labels.npy",
+    "scores.npy",
+    "timing.json"
+  ]
+}

@@ -1,0 +1,1615 @@
+{
+ "_meta": {
+  "generated": "2026-09-15T19:55:47",
+  "script": "revision/analysis/warmup_audit.py",
+  "script_sha256": "a5bf3707e011db08d08d09f5a127bbc68605ce219dcba39d0eae5cfea5f64260",
+  "coordenadas": "intervalo_ordenado/inicio_ordenado: índice en el stream ordenado tras exclusiones; *_modelo: índice en el stream que ve el modelo (entrenamiento [0,train) + ejecución)",
+  "mode": [
+   "full"
+  ],
+  "stages": {
+   "cic2017": {
+    "labels": true,
+    "hashes": true,
+    "pcap": false
+   },
+   "cic2018": {
+    "labels": true,
+    "hashes": true,
+    "pcap": false
+   },
+   "aci": {
+    "labels": true,
+    "hashes": true,
+    "pcap": false
+   },
+   "knad_active_wiretap": {
+    "labels": true,
+    "hashes": true,
+    "pcap": true
+   },
+   "knad_fuzzing": {
+    "labels": true,
+    "hashes": true,
+    "pcap": true
+   },
+   "knad_os_scan": {
+    "labels": true,
+    "hashes": true,
+    "pcap": true
+   },
+   "knad_ssdp_flood": {
+    "labels": true,
+    "hashes": true,
+    "pcap": true
+   },
+   "knad_ssl_renegotiation": {
+    "labels": true,
+    "hashes": true,
+    "pcap": true
+   },
+   "knad_video_injection": {
+    "labels": true,
+    "hashes": true,
+    "pcap": true
+   }
+  },
+  "constants": {
+   "scale_div": 1,
+   "FM": 50000,
+   "AE": 150000,
+   "TRAIN": 200000,
+   "COPIES": 300000,
+   "REF_PP": [
+    100000,
+    200000
+   ],
+   "L": 800,
+   "WARM_PCTS": [
+    5,
+    10,
+    20
+   ],
+   "CIC2018_SKIP_LINE": 1000000
+  }
+ },
+ "cic2017": {
+  "variantes": {
+   "mon_first": {
+    "ficheros_o_dias": [
+     "Monday-WorkingHours.pcap_ISCX.csv",
+     "Tuesday-WorkingHours.pcap_ISCX.csv",
+     "Wednesday-workingHours.pcap_ISCX.csv",
+     "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+     "Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv",
+     "Friday-WorkingHours-Morning.pcap_ISCX.csv",
+     "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv",
+     "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
+    ],
+    "orden": {
+     "clave": "capture days in chronological order (Mon, Tue, Wed, Thu-morning WebAttacks, Thu-afternoon Infiltration, Fri-morning, Fri-afternoon PortScan, Fri-afternoon DDoS); CSV row order inside each file (no timestamp)",
+     "desempate_estable": "orden del fichero"
+    },
+    "filas_excluidas_antes_de_ordenar": {},
+    "columnas_eliminadas": [],
+    "preprocesado": "todo objeto ajustado (sustitución de inf/NaN, estadísticos de normalización, Feature Map, vocabularios categóricos, pesos) se ajusta SOLO con las filas de entrenamiento del stream del modelo [0, train_end); nada se ajusta con la ejecución (sin fillna/inf->máx. del fichero ni z-score global como en launch_all.py:98-120,150-153). Features no finitas: sustituir con valores derivados del entrenamiento (C5).",
+    "entrenamiento": {
+     "regla": "primeras 200000 filas del stream",
+     "intervalo_ordenado": [
+      0,
+      200000
+     ],
+     "filas_mantenidas": 200000,
+     "fm_modelo": [
+      0,
+      50000
+     ],
+     "ae_modelo": [
+      50000,
+      200000
+     ],
+     "ts_primero": null,
+     "ts_ultimo": null,
+     "ataques_en_entrenamiento": 0,
+     "desviacion_tamano": false
+    },
+    "descartadas_por_filtro_de_etiqueta": {
+     "n": 0,
+     "types": {},
+     "ts_min": null,
+     "ts_max": null,
+     "sorted_idx_min": null,
+     "sorted_idx_max": null
+    },
+    "guarda_empates_timestamp": {
+     "n": 0,
+     "types": {}
+    },
+    "evaluacion": {
+     "inicio_ordenado": 200000,
+     "inicio_modelo": 200000,
+     "fin_modelo": 2830743,
+     "ts_primero": null,
+     "ts_ultimo": null,
+     "n_filas": 2630743,
+     "pct_malicioso": 21.19728152845033,
+     "tipos": {
+      "BENIGN": 2073097,
+      "DoS Hulk": 231073,
+      "PortScan": 158930,
+      "DDoS": 128027,
+      "DoS GoldenEye": 10293,
+      "FTP-Patator": 7938,
+      "SSH-Patator": 5897,
+      "DoS slowloris": 5796,
+      "DoS Slowhttptest": 5499,
+      "Bot": 1966,
+      "Web Attack � Brute Force": 1507,
+      "Web Attack � XSS": 652,
+      "Infiltration": 36,
+      "Web Attack � Sql Injection": 21,
+      "Heartbleed": 11
+     },
+     "filas_ejec_con_ts_<=_max_entrenamiento": null,
+     "filas_de_entrenamiento_reevaluadas": 0
+    },
+    "warmup_modelo": {
+     "5": [
+      200000,
+      331537
+     ],
+     "10": [
+      200000,
+      463074
+     ],
+     "20": [
+      200000,
+      726148
+     ]
+    },
+    "warmup_pct_malicioso": {
+     "5": 0.0,
+     "10": 0.0,
+     "20": 1.867155249093411
+    },
+    "duplicados_exactos_entrenamiento_vs_ejecucion": {
+     "corr": {
+      "n": 7678,
+      "n_attack": 351,
+      "n_same_source_row": 0,
+      "n_natural": 7678
+     }
+    },
+    "flags": {},
+    "declarar": "CIC-IDS2017 (MachineLearningCVE CSV release; 2,830,743 rows, which are bidirectional flows rather than packets) has no timestamp, IP address or flow identifier. The eight CSV files were concatenated in chronological order of capture (Monday to Friday; Thursday morning before Thursday afternoon; Friday morning, then the PortScan and DDoS afternoon files); the row order inside each file was kept and cannot be verified to be chronological. The first 200,000 flows (Monday; feature mapping: first 50,000; autoencoders: next 150,000) are used for training, 0 of them labelled as attacks, so no label-based filtering was applied. Evaluation starts at the next flow and training flows are never evaluated (2,630,743 flows, 21.20 % malicious). Monday occupies stream positions [0, 529,918). 7,678 evaluated rows (351 labelled as attacks) have a feature vector identical to some training row (natural duplicates; no row is duplicated by construction).",
+    "stream_index_file": "data/cache/t0/full/streams/cic2017__mon_first.npz"
+   }
+  },
+  "errores": {},
+  "variante_por_defecto_D7": "mon_first"
+ },
+ "cic2018": {
+  "variantes": {
+   "days7": {
+    "ficheros_o_dias": [
+     "02-14-2018.csv",
+     "02-15-2018.csv",
+     "02-16-2018.csv",
+     "02-21-2018.csv",
+     "02-22-2018.csv",
+     "02-23-2018.csv",
+     "03-02-2018.csv"
+    ],
+    "orden": {
+     "clave": "corrected 24-h timestamp; ties: file (chronological) then CSV row",
+     "desempate_estable": "fichero (orden de la lista) y fila del CSV"
+    },
+    "filas_excluidas_antes_de_ordenar": {
+     "repeated header row": {
+      "n": 1,
+      "types": {
+       "Label": 1
+      },
+      "n_mal": 0
+     },
+     "timestamp outside the capture day": {
+      "n": 14,
+      "types": {
+       "Benign": 14
+      },
+      "n_mal": 0
+     }
+    },
+    "columnas_eliminadas": [
+     "Timestamp",
+     "Flow ID",
+     "Src IP",
+     "Src Port",
+     "Dst IP"
+    ],
+    "preprocesado": "todo objeto ajustado (sustitución de inf/NaN, estadísticos de normalización, Feature Map, vocabularios categóricos, pesos) se ajusta SOLO con las filas de entrenamiento del stream del modelo [0, train_end); nada se ajusta con la ejecución (sin fillna/inf->máx. del fichero ni z-score global como en launch_all.py:98-120,150-153). Features no finitas y cabeceras repetidas: exclusión o sustitución con valores del entrenamiento (C5).",
+    "entrenamiento": {
+     "regla": "primeras 200000 filas benignas en el orden del stream (filtro por etiqueta)",
+     "intervalo_ordenado": [
+      0,
+      200000
+     ],
+     "filas_mantenidas": 200000,
+     "fm_modelo": [
+      0,
+      50000
+     ],
+     "ae_modelo": [
+      50000,
+      200000
+     ],
+     "ts_primero": "2018-02-14T08:28:20",
+     "ts_ultimo": "2018-02-14T10:16:30",
+     "ataques_en_entrenamiento": 0,
+     "desviacion_tamano": false
+    },
+    "descartadas_por_filtro_de_etiqueta": {
+     "n": 0,
+     "types": {},
+     "ts_min": null,
+     "ts_max": null,
+     "sorted_idx_min": null,
+     "sorted_idx_max": null
+    },
+    "guarda_empates_timestamp": {
+     "n": 3,
+     "types": {
+      "Benign": 3
+     }
+    },
+    "evaluacion": {
+     "inicio_ordenado": 200003,
+     "inicio_modelo": 200000,
+     "fin_modelo": 7340007,
+     "ts_primero": "2018-02-14T10:16:31",
+     "ts_ultimo": "2018-03-02T17:30:18",
+     "n_filas": 7140007,
+     "pct_malicioso": 28.152773519689827,
+     "tipos": {
+      "Benign": 5129897,
+      "DDOS attack-HOIC": 686012,
+      "DoS attacks-Hulk": 461912,
+      "Bot": 286191,
+      "FTP-BruteForce": 193360,
+      "SSH-Bruteforce": 187589,
+      "DoS attacks-SlowHTTPTest": 139890,
+      "DoS attacks-GoldenEye": 41508,
+      "DoS attacks-Slowloris": 10990,
+      "DDOS attack-LOIC-UDP": 1730,
+      "Brute Force -Web": 611,
+      "Brute Force -XSS": 230,
+      "SQL Injection": 87
+     },
+     "filas_ejec_con_ts_<=_max_entrenamiento": 0,
+     "filas_de_entrenamiento_reevaluadas": 0
+    },
+    "warmup_modelo": {
+     "5": [
+      200000,
+      557000
+     ],
+     "10": [
+      200000,
+      914000
+     ],
+     "20": [
+      200000,
+      1628001
+     ]
+    },
+    "warmup_pct_malicioso": {
+     "5": 46.95798319327731,
+     "10": 44.813025210084035,
+     "20": 30.35341011665958
+    },
+    "duplicados_exactos_entrenamiento_vs_ejecucion": {
+     "corr": {
+      "n": 384460,
+      "n_attack": 1,
+      "n_same_source_row": 0,
+      "n_natural": 384460
+     }
+    },
+    "flags": {
+     "chronological": true
+    },
+    "declarar": "CSE-CIC-IDS2018: 7 of the 10 daily CSV files (02-14, 02-15, 02-16, 02-21, 02-22, 02-23, 03-02-2018) (02-20, 02-28 and 03-01 were not used); rows are flows. The CSV timestamps use a 12-hour clock without AM/PM designator; hours 01-07 were mapped to 13-19 h (4,089,424 rows), which aligns the attack labels with the documented attack schedule. Rows were sorted by the corrected timestamp (1-s resolution; ties broken by file and CSV row). 14 rows with a timestamp outside the capture day (year 1970) and 1 repeated header row(s) were removed; Timestamp is not used as a feature. Training uses the first 200,000 benign flows in time order (2018-02-14T08:28:20 to 2018-02-14T10:16:30); that interval contains no attack flow according to the labels, so the label filter removed no row (the choice of the interval is nevertheless informed by the labels). 3 flows sharing the timestamp of the last training flow were dropped. Evaluation starts at the first flow strictly later than the last training flow (2018-02-14T10:16:31): 7,140,007 flows, 28.15 % malicious. 384,460 evaluated rows (1 labelled as attacks) have a feature vector identical to some training row (natural duplicates; no row is duplicated by construction).",
+    "stream_index_file": "data/cache/t0/full/streams/cic2018__days7.npz"
+   },
+   "days10": {
+    "ficheros_o_dias": [
+     "02-14-2018.csv",
+     "02-15-2018.csv",
+     "02-16-2018.csv",
+     "02-20-2018.csv",
+     "02-21-2018.csv",
+     "02-22-2018.csv",
+     "02-23-2018.csv",
+     "02-28-2018.csv",
+     "03-01-2018.csv",
+     "03-02-2018.csv"
+    ],
+    "orden": {
+     "clave": "corrected 24-h timestamp; ties: file (chronological) then CSV row",
+     "desempate_estable": "fichero (orden de la lista) y fila del CSV"
+    },
+    "filas_excluidas_antes_de_ordenar": {
+     "repeated header row": {
+      "n": 59,
+      "types": {
+       "Label": 59
+      },
+      "n_mal": 0
+     },
+     "timestamp outside the capture day": {
+      "n": 14,
+      "types": {
+       "Benign": 14
+      },
+      "n_mal": 0
+     }
+    },
+    "columnas_eliminadas": [
+     "Timestamp",
+     "Flow ID",
+     "Src IP",
+     "Src Port",
+     "Dst IP"
+    ],
+    "preprocesado": "todo objeto ajustado (sustitución de inf/NaN, estadísticos de normalización, Feature Map, vocabularios categóricos, pesos) se ajusta SOLO con las filas de entrenamiento del stream del modelo [0, train_end); nada se ajusta con la ejecución (sin fillna/inf->máx. del fichero ni z-score global como en launch_all.py:98-120,150-153). Features no finitas y cabeceras repetidas: exclusión o sustitución con valores del entrenamiento (C5).",
+    "entrenamiento": {
+     "regla": "primeras 200000 filas benignas en el orden del stream (filtro por etiqueta)",
+     "intervalo_ordenado": [
+      0,
+      200000
+     ],
+     "filas_mantenidas": 200000,
+     "fm_modelo": [
+      0,
+      50000
+     ],
+     "ae_modelo": [
+      50000,
+      200000
+     ],
+     "ts_primero": "2018-02-14T08:28:20",
+     "ts_ultimo": "2018-02-14T10:16:30",
+     "ataques_en_entrenamiento": 0,
+     "desviacion_tamano": false
+    },
+    "descartadas_por_filtro_de_etiqueta": {
+     "n": 0,
+     "types": {},
+     "ts_min": null,
+     "ts_max": null,
+     "sorted_idx_min": null,
+     "sorted_idx_max": null
+    },
+    "guarda_empates_timestamp": {
+     "n": 3,
+     "types": {
+      "Benign": 3
+     }
+    },
+    "evaluacion": {
+     "inicio_ordenado": 200003,
+     "inicio_modelo": 200000,
+     "fin_modelo": 16232926,
+     "ts_primero": "2018-02-14T10:16:31",
+     "ts_ultimo": "2018-03-02T17:30:18",
+     "n_filas": 16032926,
+     "pct_malicioso": 17.141194314749534,
+     "tipos": {
+      "Benign": 13284691,
+      "DDOS attack-HOIC": 686012,
+      "DDoS attacks-LOIC-HTTP": 576191,
+      "DoS attacks-Hulk": 461912,
+      "Bot": 286191,
+      "FTP-BruteForce": 193360,
+      "SSH-Bruteforce": 187589,
+      "Infilteration": 161934,
+      "DoS attacks-SlowHTTPTest": 139890,
+      "DoS attacks-GoldenEye": 41508,
+      "DoS attacks-Slowloris": 10990,
+      "DDOS attack-LOIC-UDP": 1730,
+      "Brute Force -Web": 611,
+      "Brute Force -XSS": 230,
+      "SQL Injection": 87
+     },
+     "filas_ejec_con_ts_<=_max_entrenamiento": 0,
+     "filas_de_entrenamiento_reevaluadas": 0
+    },
+    "warmup_modelo": {
+     "5": [
+      200000,
+      1001646
+     ],
+     "10": [
+      200000,
+      1803292
+     ],
+     "20": [
+      200000,
+      3406585
+     ]
+    },
+    "warmup_pct_malicioso": {
+     "5": 47.5208508493774,
+     "10": 27.034813371488163,
+     "20": 32.285094578812036
+    },
+    "duplicados_exactos_entrenamiento_vs_ejecucion": {
+     "corr": {
+      "n": 426958,
+      "n_attack": 87,
+      "n_same_source_row": 0,
+      "n_natural": 426958
+     }
+    },
+    "flags": {
+     "chronological": true
+    },
+    "declarar": "CSE-CIC-IDS2018: 10 of the 10 daily CSV files (02-14, 02-15, 02-16, 02-20, 02-21, 02-22, 02-23, 02-28, 03-01, 03-02-2018); rows are flows. The CSV timestamps use a 12-hour clock without AM/PM designator; hours 01-07 were mapped to 13-19 h (8,122,905 rows), which aligns the attack labels with the documented attack schedule. Rows were sorted by the corrected timestamp (1-s resolution; ties broken by file and CSV row). 14 rows with a timestamp outside the capture day (year 1970) and 59 repeated header row(s) were removed; Timestamp, Flow ID, Src IP, Src Port and Dst IP (present in 02-20 only) are not used as a feature. Training uses the first 200,000 benign flows in time order (2018-02-14T08:28:20 to 2018-02-14T10:16:30); that interval contains no attack flow according to the labels, so the label filter removed no row (the choice of the interval is nevertheless informed by the labels). 3 flows sharing the timestamp of the last training flow were dropped. Evaluation starts at the first flow strictly later than the last training flow (2018-02-14T10:16:31): 16,032,926 flows, 17.14 % malicious. 426,958 evaluated rows (87 labelled as attacks) have a feature vector identical to some training row (natural duplicates; no row is duplicated by construction).",
+    "stream_index_file": "data/cache/t0/full/streams/cic2018__days10.npz"
+   },
+   "days7_rawclock": {
+    "ficheros_o_dias": [
+     "02-14-2018.csv",
+     "02-15-2018.csv",
+     "02-16-2018.csv",
+     "02-21-2018.csv",
+     "02-22-2018.csv",
+     "02-23-2018.csv",
+     "03-02-2018.csv"
+    ],
+    "orden": {
+     "clave": "RAW 12-hour clock as written in the CSV (documentation only: wrong order)",
+     "desempate_estable": "fichero (orden de la lista) y fila del CSV"
+    },
+    "filas_excluidas_antes_de_ordenar": {
+     "repeated header row": {
+      "n": 1,
+      "types": {
+       "Label": 1
+      },
+      "n_mal": 0
+     },
+     "timestamp outside the capture day": {
+      "n": 14,
+      "types": {
+       "Benign": 14
+      },
+      "n_mal": 0
+     }
+    },
+    "columnas_eliminadas": [
+     "Timestamp",
+     "Flow ID",
+     "Src IP",
+     "Src Port",
+     "Dst IP"
+    ],
+    "preprocesado": "todo objeto ajustado (sustitución de inf/NaN, estadísticos de normalización, Feature Map, vocabularios categóricos, pesos) se ajusta SOLO con las filas de entrenamiento del stream del modelo [0, train_end); nada se ajusta con la ejecución (sin fillna/inf->máx. del fichero ni z-score global como en launch_all.py:98-120,150-153). Features no finitas y cabeceras repetidas: exclusión o sustitución con valores del entrenamiento (C5).",
+    "entrenamiento": {
+     "regla": "primeras 200000 filas benignas en el orden del stream (filtro por etiqueta)",
+     "intervalo_ordenado": [
+      0,
+      387589
+     ],
+     "filas_mantenidas": 200000,
+     "fm_modelo": [
+      0,
+      50000
+     ],
+     "ae_modelo": [
+      50000,
+      200000
+     ],
+     "ts_primero": "2018-02-14T08:28:20",
+     "ts_ultimo": "2018-02-14T17:30:48",
+     "ataques_en_entrenamiento": 0,
+     "desviacion_tamano": false
+    },
+    "descartadas_por_filtro_de_etiqueta": {
+     "n": 187589,
+     "types": {
+      "SSH-Bruteforce": 187589
+     },
+     "ts_min": "2018-02-14T14:01:21",
+     "ts_max": "2018-02-14T15:32:30",
+     "sorted_idx_min": 66501,
+     "sorted_idx_max": 326173
+    },
+    "guarda_empates_timestamp": {
+     "n": 72,
+     "types": {
+      "Benign": 72
+     }
+    },
+    "evaluacion": {
+     "inicio_ordenado": 387661,
+     "inicio_modelo": 200000,
+     "fin_modelo": 7152349,
+     "ts_primero": "2018-02-14T08:30:57",
+     "ts_ultimo": "2018-03-02T17:30:18",
+     "n_filas": 6952349,
+     "pct_malicioso": 26.214463629486954,
+     "tipos": {
+      "Benign": 5129828,
+      "DDOS attack-HOIC": 686012,
+      "DoS attacks-Hulk": 461912,
+      "Bot": 286191,
+      "FTP-BruteForce": 193360,
+      "DoS attacks-SlowHTTPTest": 139890,
+      "DoS attacks-GoldenEye": 41508,
+      "DoS attacks-Slowloris": 10990,
+      "DDOS attack-LOIC-UDP": 1730,
+      "Brute Force -Web": 611,
+      "Brute Force -XSS": 230,
+      "SQL Injection": 87
+     },
+     "filas_ejec_con_ts_<=_max_entrenamiento": 660909,
+     "filas_de_entrenamiento_reevaluadas": 0
+    },
+    "warmup_modelo": {
+     "5": [
+      200000,
+      547617
+     ],
+     "10": [
+      200000,
+      895234
+     ],
+     "20": [
+      200000,
+      1590469
+     ]
+    },
+    "warmup_pct_malicioso": {
+     "5": 17.453116504658862,
+     "10": 27.8122186199179,
+     "20": 16.891279129559884
+    },
+    "duplicados_exactos_entrenamiento_vs_ejecucion": {
+     "corr": {
+      "n": 399523,
+      "n_attack": 1,
+      "n_same_source_row": 0,
+      "n_natural": 399523
+     }
+    },
+    "flags": {
+     "not_recommended": true
+    },
+    "declarar": "NOT RECOMMENDED (documentation of the raw 12-hour clock ordering): 187,589 attack flows in that interval (SSH-Bruteforce 187,589) were removed by label and are neither used for training nor evaluated.",
+    "stream_index_file": "data/cache/t0/full/streams/cic2018__days7_rawclock.npz"
+   }
+  },
+  "errores": {},
+  "variante_por_defecto_D7": "days7"
+ },
+ "aci": {
+  "variantes": {
+   "d7_literal": {
+    "ficheros_o_dias": [
+     "ACI-IoT-2023.csv"
+    ],
+    "orden": {
+     "clave": "resolved timestamp; ties: CSV row",
+     "desempate_estable": "fichero (orden de la lista) y fila del CSV"
+    },
+    "filas_excluidas_antes_de_ordenar": {},
+    "columnas_eliminadas": [
+     "Flow ID",
+     "Src IP",
+     "Dst IP",
+     "Timestamp"
+    ],
+    "preprocesado": "todo objeto ajustado (sustitución de inf/NaN, estadísticos de normalización, Feature Map, vocabularios categóricos, pesos) se ajusta SOLO con las filas de entrenamiento del stream del modelo [0, train_end); nada se ajusta con la ejecución (sin fillna/inf->máx. del fichero ni z-score global como en launch_all.py:98-120,150-153). Connection Type: vocabulario del entrenamiento, categoría no vista -> código reservado; sin LabelEncoder de identificadores ni desbordamiento uint8 (identificadores eliminados).",
+    "entrenamiento": {
+     "regla": "primeras 200000 filas benignas en el orden del stream (filtro por etiqueta)",
+     "intervalo_ordenado": [
+      0,
+      1099022
+     ],
+     "filas_mantenidas": 200000,
+     "fm_modelo": [
+      0,
+      50000
+     ],
+     "ae_modelo": [
+      50000,
+      200000
+     ],
+     "ts_primero": "2023-10-30T09:00:59",
+     "ts_ultimo": "2023-11-02T10:34:37",
+     "ataques_en_entrenamiento": 0,
+     "desviacion_tamano": false
+    },
+    "descartadas_por_filtro_de_etiqueta": {
+     "n": 899022,
+     "types": {
+      "Port Scan": 441282,
+      "ICMP Flood": 225234,
+      "Ping Sweep": 71928,
+      "DNS Flood": 46935,
+      "Vulnerability Scan": 39537,
+      "OS Scan": 37524,
+      "Slowloris": 18643,
+      "SYN Flood": 13857,
+      "Dictionary Attack": 3291,
+      "UDP Flood": 791
+     },
+     "ts_min": "2023-10-30T09:12:09",
+     "ts_max": "2023-11-02T10:34:37",
+     "sorted_idx_min": 2412,
+     "sorted_idx_max": 1099013
+    },
+    "guarda_empates_timestamp": {
+     "n": 3,
+     "types": {
+      "Benign": 3
+     }
+    },
+    "evaluacion": {
+     "inicio_ordenado": 1099025,
+     "inicio_modelo": 200000,
+     "fin_modelo": 332386,
+     "ts_primero": "2023-11-02T10:34:38",
+     "ts_ultimo": "2023-11-03T14:51:14",
+     "n_filas": 132386,
+     "pct_malicioso": 2.3371051319625944,
+     "tipos": {
+      "Benign": 129292,
+      "Dictionary Attack": 3089,
+      "ARP Spoofing": 5
+     },
+     "filas_ejec_con_ts_<=_max_entrenamiento": 0,
+     "filas_de_entrenamiento_reevaluadas": 0
+    },
+    "warmup_modelo": {
+     "5": [
+      200000,
+      206619
+     ],
+     "10": [
+      200000,
+      213238
+     ],
+     "20": [
+      200000,
+      226477
+     ]
+    },
+    "warmup_pct_malicioso": {
+     "5": 20.259857984589818,
+     "10": 19.632875056655084,
+     "20": 11.678060203195226
+    },
+    "duplicados_exactos_entrenamiento_vs_ejecucion": {
+     "corr": {
+      "n": 0,
+      "n_attack": 0,
+      "n_same_source_row": 0,
+      "n_natural": 0
+     }
+    },
+    "flags": {
+     "chronological": true
+    },
+    "declarar": "ACI-IoT-2023: Flow ID, Src IP and Dst IP (identifiers) and Timestamp are not used as features. Timestamps appear in three textual forms; 392,066 rows written as yyyy-dd-mm (also syntactically valid as yyyy-mm-dd) and 89,786 rows written as dd/mm/yyyy with a 12-hour clock (also valid as mm/dd/yyyy) were resolved with the documented capture period (30 October - 3 November 2023); no row remained ambiguous. Rows were sorted by timestamp (ties: CSV row). Training uses the first 200,000 benign flows in time order (2023-10-30T09:00:59 to 2023-11-02T10:34:37); 899,022 attack flows in that interval (Port Scan 441,282, ICMP Flood 225,234, Ping Sweep 71,928, DNS Flood 46,935, Vulnerability Scan 39,537, OS Scan 37,524 ...) were removed by label and are not evaluated. Evaluation covers 132,386 flows (2023-11-02T10:34:38 to 2023-11-03T14:51:14) with 2.34 % malicious flows (Dictionary Attack 3,089, ARP Spoofing 5). 0 evaluated rows (0 labelled as attacks) have a feature vector identical to some training row (natural duplicates; no row is duplicated by construction).",
+    "stream_index_file": "data/cache/t0/full/streams/aci__d7_literal.npz"
+   },
+   "oct31_train_chrono": {
+    "ficheros_o_dias": [
+     "ACI-IoT-2023.csv"
+    ],
+    "orden": {
+     "clave": "resolved timestamp (chronological); 30 Oct dropped (before the training day); ties: CSV row",
+     "desempate_estable": "fichero (orden de la lista) y fila del CSV"
+    },
+    "filas_excluidas_antes_de_ordenar": {
+     "day not used (not in day_order)": {
+      "n": 677295,
+      "types": {
+       "Port Scan": 441282,
+       "Benign": 87024,
+       "Ping Sweep": 71928,
+       "Vulnerability Scan": 39537,
+       "OS Scan": 37524
+      },
+      "n_mal": 590271,
+      "days": [
+       "2023-10-30"
+      ]
+     }
+    },
+    "columnas_eliminadas": [
+     "Flow ID",
+     "Src IP",
+     "Dst IP",
+     "Timestamp"
+    ],
+    "preprocesado": "todo objeto ajustado (sustitución de inf/NaN, estadísticos de normalización, Feature Map, vocabularios categóricos, pesos) se ajusta SOLO con las filas de entrenamiento del stream del modelo [0, train_end); nada se ajusta con la ejecución (sin fillna/inf->máx. del fichero ni z-score global como en launch_all.py:98-120,150-153). Connection Type: vocabulario del entrenamiento, categoría no vista -> código reservado; sin LabelEncoder de identificadores ni desbordamiento uint8 (identificadores eliminados).",
+    "entrenamiento": {
+     "regla": "todas las filas de los días benignos (desviación del tamaño de entrenamiento)",
+     "intervalo_ordenado": [
+      0,
+      72264
+     ],
+     "filas_mantenidas": 72264,
+     "fm_modelo": [
+      0,
+      50000
+     ],
+     "ae_modelo": [
+      50000,
+      72264
+     ],
+     "ts_primero": "2023-10-31T08:59:06",
+     "ts_ultimo": "2023-10-31T16:05:22",
+     "ataques_en_entrenamiento": 0,
+     "desviacion_tamano": true
+    },
+    "descartadas_por_filtro_de_etiqueta": {
+     "n": 0,
+     "types": {},
+     "ts_min": null,
+     "ts_max": null,
+     "sorted_idx_min": null,
+     "sorted_idx_max": null
+    },
+    "guarda_empates_timestamp": {
+     "n": 0,
+     "types": {}
+    },
+    "evaluacion": {
+     "inicio_ordenado": 72264,
+     "inicio_modelo": 72264,
+     "fin_modelo": 554116,
+     "ts_primero": "2023-11-01T09:30:38",
+     "ts_ultimo": "2023-11-03T14:51:14",
+     "n_filas": 481852,
+     "pct_malicioso": 64.71800469853814,
+     "tipos": {
+      "ICMP Flood": 225234,
+      "Benign": 170007,
+      "DNS Flood": 46935,
+      "Slowloris": 18643,
+      "SYN Flood": 13857,
+      "Dictionary Attack": 6380,
+      "UDP Flood": 791,
+      "ARP Spoofing": 5
+     },
+     "filas_ejec_con_ts_<=_max_entrenamiento": 0,
+     "filas_de_entrenamiento_reevaluadas": 0
+    },
+    "warmup_modelo": {
+     "5": [
+      72264,
+      96356
+     ],
+     "10": [
+      72264,
+      120449
+     ],
+     "20": [
+      72264,
+      168634
+     ]
+    },
+    "warmup_pct_malicioso": {
+     "5": 95.51303337207372,
+     "10": 96.58192383521843,
+     "20": 97.19622289094116
+    },
+    "duplicados_exactos_entrenamiento_vs_ejecucion": {
+     "corr": {
+      "n": 0,
+      "n_attack": 0,
+      "n_same_source_row": 0,
+      "n_natural": 0
+     }
+    },
+    "flags": {
+     "deviation_train_size": true,
+     "chronological": true
+    },
+    "declarar": "ACI-IoT-2023: Flow ID, Src IP and Dst IP (identifiers) and Timestamp are not used as features. Timestamps appear in three textual forms; 392,066 rows written as yyyy-dd-mm (also syntactically valid as yyyy-mm-dd) and 89,786 rows written as dd/mm/yyyy with a 12-hour clock (also valid as mm/dd/yyyy) were resolved with the documented capture period (30 October - 3 November 2023); no row remained ambiguous. Rows were sorted by timestamp. Training uses all 72,264 flows of the first benign capture day (31 October; 0 labelled as attacks, no row-level filtering), which deviates from the 200,000 training rows of the original configuration (feature mapping 50,000, autoencoders 22,264). The 677,295 flows of 30 October, recorded before the training day (Port Scan 441,282, Ping Sweep 71,928, Vulnerability Scan 39,537, OS Scan 37,524), are not used. Evaluation covers the later days in time order (2023-11-01T09:30:38 to 2023-11-03T14:51:14; every evaluated flow is later than every training flow): 481,852 flows, 64.72 % malicious (ICMP Flood 225,234, DNS Flood 46,935, Slowloris 18,643, SYN Flood 13,857, Dictionary Attack 6,380, UDP Flood 791, ARP Spoofing 5). 0 evaluated rows (0 labelled as attacks) have a feature vector identical to some training row (natural duplicates; no row is duplicated by construction).",
+    "stream_index_file": "data/cache/t0/full/streams/aci__oct31_train_chrono.npz"
+   },
+   "benign_days_first": {
+    "ficheros_o_dias": [
+     "ACI-IoT-2023.csv"
+    ],
+    "orden": {
+     "clave": "days 2023-10-31 > 2023-11-03 > 2023-10-30 > 2023-11-01 > 2023-11-02; resolved timestamp inside each day; ties: CSV row",
+     "desempate_estable": "fichero (orden de la lista) y fila del CSV"
+    },
+    "filas_excluidas_antes_de_ordenar": {},
+    "columnas_eliminadas": [
+     "Flow ID",
+     "Src IP",
+     "Dst IP",
+     "Timestamp"
+    ],
+    "preprocesado": "todo objeto ajustado (sustitución de inf/NaN, estadísticos de normalización, Feature Map, vocabularios categóricos, pesos) se ajusta SOLO con las filas de entrenamiento del stream del modelo [0, train_end); nada se ajusta con la ejecución (sin fillna/inf->máx. del fichero ni z-score global como en launch_all.py:98-120,150-153). Connection Type: vocabulario del entrenamiento, categoría no vista -> código reservado; sin LabelEncoder de identificadores ni desbordamiento uint8 (identificadores eliminados).",
+    "entrenamiento": {
+     "regla": "primeras 200000 filas benignas en el orden del stream (filtro por etiqueta)",
+     "intervalo_ordenado": [
+      0,
+      271816
+     ],
+     "filas_mantenidas": 200000,
+     "fm_modelo": [
+      0,
+      50000
+     ],
+     "ae_modelo": [
+      50000,
+      200000
+     ],
+     "ts_primero": "2023-10-30T09:00:59",
+     "ts_ultimo": "2023-11-03T14:51:14",
+     "ataques_en_entrenamiento": 0,
+     "desviacion_tamano": false
+    },
+    "descartadas_por_filtro_de_etiqueta": {
+     "n": 71816,
+     "types": {
+      "Ping Sweep": 71816
+     },
+     "ts_min": "2023-10-30T09:12:09",
+     "ts_max": "2023-10-30T10:50:09",
+     "sorted_idx_min": 164462,
+     "sorted_idx_max": 270992
+    },
+    "guarda_empates_timestamp": {
+     "n": 0,
+     "types": {}
+    },
+    "evaluacion": {
+     "inicio_ordenado": 271816,
+     "inicio_modelo": 200000,
+     "fin_modelo": 1159595,
+     "ts_primero": "2023-10-30T10:53:12",
+     "ts_ultimo": "2023-11-02T13:48:43",
+     "n_filas": 959595,
+     "pct_malicioso": 86.52608652608653,
+     "tipos": {
+      "Port Scan": 441282,
+      "ICMP Flood": 225234,
+      "Benign": 129295,
+      "DNS Flood": 46935,
+      "Vulnerability Scan": 39537,
+      "OS Scan": 37524,
+      "Slowloris": 18643,
+      "SYN Flood": 13857,
+      "Dictionary Attack": 6380,
+      "UDP Flood": 791,
+      "Ping Sweep": 112,
+      "ARP Spoofing": 5
+     },
+     "filas_ejec_con_ts_<=_max_entrenamiento": 959595,
+     "filas_de_entrenamiento_reevaluadas": 0
+    },
+    "warmup_modelo": {
+     "5": [
+      200000,
+      247979
+     ],
+     "10": [
+      200000,
+      295959
+     ],
+     "20": [
+      200000,
+      391919
+     ]
+    },
+    "warmup_pct_malicioso": {
+     "5": 75.76856541403531,
+     "10": 85.79601704894799,
+     "20": 92.89439815755605
+    },
+    "duplicados_exactos_entrenamiento_vs_ejecucion": {
+     "corr": {
+      "n": 0,
+      "n_attack": 0,
+      "n_same_source_row": 0,
+      "n_natural": 0
+     }
+    },
+    "flags": {
+     "not_chronological": true
+    },
+    "declarar": "ACI-IoT-2023: Flow ID, Src IP and Dst IP (identifiers) and Timestamp are not used as features. Timestamps appear in three textual forms; 392,066 rows written as yyyy-dd-mm (also syntactically valid as yyyy-mm-dd) and 89,786 rows written as dd/mm/yyyy with a 12-hour clock (also valid as mm/dd/yyyy) were resolved with the documented capture period (30 October - 3 November 2023); no row remained ambiguous. The two benign capture days (31 October and 3 November) were placed first, followed by the attack days in chronological order (30 October, 1 and 2 November); the stream is therefore NOT chronological across days and training includes a day recorded after the evaluated days. Training uses the first 200,000 benign flows in this order; 71,816 attack flows in the training interval (Ping Sweep 71,816) were removed by label and are not evaluated. Evaluation: 959,595 flows, 86.53 % malicious (Port Scan 441,282, ICMP Flood 225,234, DNS Flood 46,935, Vulnerability Scan 39,537, OS Scan 37,524, Slowloris 18,643 ...). 0 evaluated rows (0 labelled as attacks) have a feature vector identical to some training row (natural duplicates; no row is duplicated by construction).",
+    "stream_index_file": "data/cache/t0/full/streams/aci__benign_days_first.npz"
+   },
+   "benign_days_only": {
+    "ficheros_o_dias": [
+     "ACI-IoT-2023.csv"
+    ],
+    "orden": {
+     "clave": "days 2023-10-31 > 2023-11-03 > 2023-10-30 > 2023-11-01 > 2023-11-02; resolved timestamp inside each day; ties: CSV row",
+     "desempate_estable": "fichero (orden de la lista) y fila del CSV"
+    },
+    "filas_excluidas_antes_de_ordenar": {},
+    "columnas_eliminadas": [
+     "Flow ID",
+     "Src IP",
+     "Dst IP",
+     "Timestamp"
+    ],
+    "preprocesado": "todo objeto ajustado (sustitución de inf/NaN, estadísticos de normalización, Feature Map, vocabularios categóricos, pesos) se ajusta SOLO con las filas de entrenamiento del stream del modelo [0, train_end); nada se ajusta con la ejecución (sin fillna/inf->máx. del fichero ni z-score global como en launch_all.py:98-120,150-153). Connection Type: vocabulario del entrenamiento, categoría no vista -> código reservado; sin LabelEncoder de identificadores ni desbordamiento uint8 (identificadores eliminados).",
+    "entrenamiento": {
+     "regla": "todas las filas de los días benignos (desviación del tamaño de entrenamiento)",
+     "intervalo_ordenado": [
+      0,
+      162050
+     ],
+     "filas_mantenidas": 162050,
+     "fm_modelo": [
+      0,
+      50000
+     ],
+     "ae_modelo": [
+      50000,
+      162050
+     ],
+     "ts_primero": "2023-10-31T08:59:06",
+     "ts_ultimo": "2023-11-03T14:51:14",
+     "ataques_en_entrenamiento": 0,
+     "desviacion_tamano": true
+    },
+    "descartadas_por_filtro_de_etiqueta": {
+     "n": 0,
+     "types": {},
+     "ts_min": null,
+     "ts_max": null,
+     "sorted_idx_min": null,
+     "sorted_idx_max": null
+    },
+    "guarda_empates_timestamp": {
+     "n": 0,
+     "types": {}
+    },
+    "evaluacion": {
+     "inicio_ordenado": 162050,
+     "inicio_modelo": 162050,
+     "fin_modelo": 1231411,
+     "ts_primero": "2023-10-30T09:00:59",
+     "ts_ultimo": "2023-11-02T13:48:43",
+     "n_filas": 1069361,
+     "pct_malicioso": 84.36028618960295,
+     "tipos": {
+      "Port Scan": 441282,
+      "ICMP Flood": 225234,
+      "Benign": 167245,
+      "Ping Sweep": 71928,
+      "DNS Flood": 46935,
+      "Vulnerability Scan": 39537,
+      "OS Scan": 37524,
+      "Slowloris": 18643,
+      "SYN Flood": 13857,
+      "Dictionary Attack": 6380,
+      "UDP Flood": 791,
+      "ARP Spoofing": 5
+     },
+     "filas_ejec_con_ts_<=_max_entrenamiento": 1069361,
+     "filas_de_entrenamiento_reevaluadas": 0
+    },
+    "warmup_modelo": {
+     "5": [
+      162050,
+      215518
+     ],
+     "10": [
+      162050,
+      268986
+     ],
+     "20": [
+      162050,
+      375922
+     ]
+    },
+    "warmup_pct_malicioso": {
+     "5": 88.62871250093514,
+     "10": 67.08124485673675,
+     "20": 75.88277100321687
+    },
+    "duplicados_exactos_entrenamiento_vs_ejecucion": {
+     "corr": {
+      "n": 0,
+      "n_attack": 0,
+      "n_same_source_row": 0,
+      "n_natural": 0
+     }
+    },
+    "flags": {
+     "not_chronological": true,
+     "deviation_train_size": true
+    },
+    "declarar": "ACI-IoT-2023: Flow ID, Src IP and Dst IP (identifiers) and Timestamp are not used as features. Timestamps appear in three textual forms; 392,066 rows written as yyyy-dd-mm (also syntactically valid as yyyy-mm-dd) and 89,786 rows written as dd/mm/yyyy with a 12-hour clock (also valid as mm/dd/yyyy) were resolved with the documented capture period (30 October - 3 November 2023); no row remained ambiguous. Training uses all 162,050 flows of the two benign capture days (31 October and 3 November; 0 labelled as attacks), which deviates from the 200,000 training rows of the original configuration (feature mapping 50,000, autoencoders 112,050); the attack days follow in chronological order (the stream is NOT chronological across days). Evaluation: 1,069,361 flows, 84.36 % malicious (Port Scan 441,282, ICMP Flood 225,234, Ping Sweep 71,928, DNS Flood 46,935, Vulnerability Scan 39,537, OS Scan 37,524 ...). 0 evaluated rows (0 labelled as attacks) have a feature vector identical to some training row (natural duplicates; no row is duplicated by construction).",
+    "stream_index_file": "data/cache/t0/full/streams/aci__benign_days_only.npz"
+   }
+  },
+  "errores": {},
+  "variante_por_defecto_D7": "d7_literal"
+ },
+ "knad_active_wiretap": {
+  "variantes": {
+   "capture_order": {
+    "ficheros_o_dias": [
+     "Active Wiretap"
+    ],
+    "orden": {
+     "clave": "capture (pcap/CSV) order; AfterImage features are order-dependent and are not re-sorted",
+     "desempate_estable": "orden del fichero"
+    },
+    "filas_excluidas_antes_de_ordenar": {},
+    "columnas_eliminadas": [],
+    "preprocesado": "todo objeto ajustado (sustitución de inf/NaN, estadísticos de normalización, Feature Map, vocabularios categóricos, pesos) se ajusta SOLO con las filas de entrenamiento del stream del modelo [0, train_end); nada se ajusta con la ejecución (sin fillna/inf->máx. del fichero ni z-score global como en launch_all.py:98-120,150-153). Carga con header=None; sin transformación en carga.",
+    "entrenamiento": {
+     "regla": "primeras 200000 filas del stream",
+     "intervalo_ordenado": [
+      0,
+      200000
+     ],
+     "filas_mantenidas": 200000,
+     "fm_modelo": [
+      0,
+      50000
+     ],
+     "ae_modelo": [
+      50000,
+      200000
+     ],
+     "ts_primero": "2017-08-09T08:56:53.367032",
+     "ts_ultimo": "2017-08-09T08:58:31.157706",
+     "ataques_en_entrenamiento": 0,
+     "desviacion_tamano": false
+    },
+    "descartadas_por_filtro_de_etiqueta": {
+     "n": 0,
+     "types": {},
+     "ts_min": null,
+     "ts_max": null,
+     "sorted_idx_min": null,
+     "sorted_idx_max": null
+    },
+    "guarda_empates_timestamp": {
+     "n": 0,
+     "types": {}
+    },
+    "evaluacion": {
+     "inicio_ordenado": 200000,
+     "inicio_modelo": 200000,
+     "fin_modelo": 2278689,
+     "ts_primero": "2017-08-09T08:58:31.157855",
+     "ts_ultimo": "2017-08-09T09:18:49.604291",
+     "n_filas": 2078689,
+     "pct_malicioso": 44.41337785498456,
+     "tipos": {
+      "Benign": 1155473,
+      "Active Wiretap": 923216
+     },
+     "filas_ejec_con_ts_<=_max_entrenamiento": 0,
+     "filas_de_entrenamiento_reevaluadas": 0
+    },
+    "warmup_modelo": {
+     "5": [
+      200000,
+      303934
+     ],
+     "10": [
+      200000,
+      407868
+     ],
+     "20": [
+      200000,
+      615737
+     ]
+    },
+    "warmup_pct_malicioso": {
+     "5": 0.0,
+     "10": 0.0,
+     "20": 0.0
+    },
+    "duplicados_exactos_entrenamiento_vs_ejecucion": {
+     "knad_text": {
+      "n": 0,
+      "n_attack": 0,
+      "n_same_source_row": 0,
+      "n_natural": 0
+     }
+    },
+    "flags": {},
+    "declarar": "Kitsune Active Wiretap: the AfterImage feature CSV has no header and is now read as such (the submitted code consumed the first packet as a header, which shifted features and labels by one packet). Packets are kept in capture order (pcap timestamps: 12 backward steps, maximum 4 us). Training uses packets [0, 200,000) (feature mapping 50,000, autoencoders 150,000); the first attack packet is at index 1,300,000, so training is attack-free according to the labels without any row-level filtering, relying on the dataset's attack-free prelude. Evaluation starts at packet 200,000: 2,078,689 packets, 44.41 % malicious. 0 evaluated rows (0 labelled as attacks) have a feature vector identical to some training row (natural duplicates; no row is duplicated by construction).",
+    "stream_index_file": "data/cache/t0/full/streams/knad_active_wiretap__capture_order.npz"
+   }
+  },
+  "errores": {},
+  "variante_por_defecto_D7": "capture_order"
+ },
+ "knad_fuzzing": {
+  "variantes": {
+   "capture_order": {
+    "ficheros_o_dias": [
+     "Fuzzing"
+    ],
+    "orden": {
+     "clave": "capture (pcap/CSV) order; AfterImage features are order-dependent and are not re-sorted",
+     "desempate_estable": "orden del fichero"
+    },
+    "filas_excluidas_antes_de_ordenar": {},
+    "columnas_eliminadas": [],
+    "preprocesado": "todo objeto ajustado (sustitución de inf/NaN, estadísticos de normalización, Feature Map, vocabularios categóricos, pesos) se ajusta SOLO con las filas de entrenamiento del stream del modelo [0, train_end); nada se ajusta con la ejecución (sin fillna/inf->máx. del fichero ni z-score global como en launch_all.py:98-120,150-153). Carga con header=None; sin transformación en carga.",
+    "entrenamiento": {
+     "regla": "primeras 200000 filas del stream",
+     "intervalo_ordenado": [
+      0,
+      200000
+     ],
+     "filas_mantenidas": 200000,
+     "fm_modelo": [
+      0,
+      50000
+     ],
+     "ae_modelo": [
+      50000,
+      200000
+     ],
+     "ts_primero": "2017-08-09T11:26:24.256966",
+     "ts_ultimo": "2017-08-09T11:28:59.800895",
+     "ataques_en_entrenamiento": 0,
+     "desviacion_tamano": false
+    },
+    "descartadas_por_filtro_de_etiqueta": {
+     "n": 0,
+     "types": {},
+     "ts_min": null,
+     "ts_max": null,
+     "sorted_idx_min": null,
+     "sorted_idx_max": null
+    },
+    "guarda_empates_timestamp": {
+     "n": 0,
+     "types": {}
+    },
+    "evaluacion": {
+     "inicio_ordenado": 200000,
+     "inicio_modelo": 200000,
+     "fin_modelo": 2244139,
+     "ts_primero": "2017-08-09T11:28:59.800948",
+     "ts_ultimo": "2017-08-09T11:55:21.468387",
+     "n_filas": 2044139,
+     "pct_malicioso": 21.171896823063403,
+     "tipos": {
+      "Benign": 1611356,
+      "Fuzzing": 432783
+     },
+     "filas_ejec_con_ts_<=_max_entrenamiento": 0,
+     "filas_de_entrenamiento_reevaluadas": 0
+    },
+    "warmup_modelo": {
+     "5": [
+      200000,
+      302206
+     ],
+     "10": [
+      200000,
+      404413
+     ],
+     "20": [
+      200000,
+      608827
+     ]
+    },
+    "warmup_pct_malicioso": {
+     "5": 0.0,
+     "10": 0.0,
+     "20": 0.0
+    },
+    "duplicados_exactos_entrenamiento_vs_ejecucion": {
+     "knad_text": {
+      "n": 0,
+      "n_attack": 0,
+      "n_same_source_row": 0,
+      "n_natural": 0
+     }
+    },
+    "flags": {},
+    "declarar": "Kitsune Fuzzing: the AfterImage feature CSV has no header and is now read as such (the submitted code consumed the first packet as a header, which shifted features and labels by one packet). Packets are kept in capture order (pcap timestamps: 19 backward steps, maximum 2 us). Training uses packets [0, 200,000) (feature mapping 50,000, autoencoders 150,000); the first attack packet is at index 1,300,005, so training is attack-free according to the labels without any row-level filtering, relying on the dataset's attack-free prelude. Evaluation starts at packet 200,000: 2,044,139 packets, 21.17 % malicious. 0 evaluated rows (0 labelled as attacks) have a feature vector identical to some training row (natural duplicates; no row is duplicated by construction).",
+    "stream_index_file": "data/cache/t0/full/streams/knad_fuzzing__capture_order.npz"
+   }
+  },
+  "errores": {},
+  "variante_por_defecto_D7": "capture_order"
+ },
+ "knad_os_scan": {
+  "variantes": {
+   "capture_order": {
+    "ficheros_o_dias": [
+     "OS Scan"
+    ],
+    "orden": {
+     "clave": "capture (pcap/CSV) order; AfterImage features are order-dependent and are not re-sorted",
+     "desempate_estable": "orden del fichero"
+    },
+    "filas_excluidas_antes_de_ordenar": {},
+    "columnas_eliminadas": [],
+    "preprocesado": "todo objeto ajustado (sustitución de inf/NaN, estadísticos de normalización, Feature Map, vocabularios categóricos, pesos) se ajusta SOLO con las filas de entrenamiento del stream del modelo [0, train_end); nada se ajusta con la ejecución (sin fillna/inf->máx. del fichero ni z-score global como en launch_all.py:98-120,150-153). Carga con header=None; sin transformación en carga.",
+    "entrenamiento": {
+     "regla": "primeras 200000 filas del stream",
+     "intervalo_ordenado": [
+      0,
+      200000
+     ],
+     "filas_mantenidas": 200000,
+     "fm_modelo": [
+      0,
+      50000
+     ],
+     "ae_modelo": [
+      50000,
+      200000
+     ],
+     "ts_primero": "2017-08-07T12:17:12.597437",
+     "ts_ultimo": "2017-08-07T12:23:52.364253",
+     "ataques_en_entrenamiento": 0,
+     "desviacion_tamano": false
+    },
+    "descartadas_por_filtro_de_etiqueta": {
+     "n": 0,
+     "types": {},
+     "ts_min": null,
+     "ts_max": null,
+     "sorted_idx_min": null,
+     "sorted_idx_max": null
+    },
+    "guarda_empates_timestamp": {
+     "n": 0,
+     "types": {}
+    },
+    "evaluacion": {
+     "inicio_ordenado": 200000,
+     "inicio_modelo": 200000,
+     "fin_modelo": 1697851,
+     "ts_primero": "2017-08-07T12:23:52.364320",
+     "ts_ultimo": "2017-08-07T13:09:25.354493",
+     "n_filas": 1497851,
+     "pct_malicioso": 4.386284082996239,
+     "tipos": {
+      "Benign": 1432151,
+      "OS Scan": 65700
+     },
+     "filas_ejec_con_ts_<=_max_entrenamiento": 0,
+     "filas_de_entrenamiento_reevaluadas": 0
+    },
+    "warmup_modelo": {
+     "5": [
+      200000,
+      274892
+     ],
+     "10": [
+      200000,
+      349785
+     ],
+     "20": [
+      200000,
+      499570
+     ]
+    },
+    "warmup_pct_malicioso": {
+     "5": 0.0,
+     "10": 0.0,
+     "20": 0.0
+    },
+    "duplicados_exactos_entrenamiento_vs_ejecucion": {
+     "knad_text": {
+      "n": 0,
+      "n_attack": 0,
+      "n_same_source_row": 0,
+      "n_natural": 0
+     }
+    },
+    "flags": {},
+    "declarar": "Kitsune OS Scan: the AfterImage feature CSV has no header and is now read as such (the submitted code consumed the first packet as a header, which shifted features and labels by one packet). Packets are kept in capture order (pcap timestamps: 108 backward steps, maximum 13 us). Training uses packets [0, 200,000) (feature mapping 50,000, autoencoders 150,000); the first attack packet is at index 1,314,658, so training is attack-free according to the labels without any row-level filtering, relying on the dataset's attack-free prelude. Evaluation starts at packet 200,000: 1,497,851 packets, 4.39 % malicious. 0 evaluated rows (0 labelled as attacks) have a feature vector identical to some training row (natural duplicates; no row is duplicated by construction).",
+    "stream_index_file": "data/cache/t0/full/streams/knad_os_scan__capture_order.npz"
+   }
+  },
+  "errores": {},
+  "variante_por_defecto_D7": "capture_order"
+ },
+ "knad_ssdp_flood": {
+  "variantes": {
+   "capture_order": {
+    "ficheros_o_dias": [
+     "SSDP Flood"
+    ],
+    "orden": {
+     "clave": "capture (pcap/CSV) order; AfterImage features are order-dependent and are not re-sorted",
+     "desempate_estable": "orden del fichero"
+    },
+    "filas_excluidas_antes_de_ordenar": {},
+    "columnas_eliminadas": [],
+    "preprocesado": "todo objeto ajustado (sustitución de inf/NaN, estadísticos de normalización, Feature Map, vocabularios categóricos, pesos) se ajusta SOLO con las filas de entrenamiento del stream del modelo [0, train_end); nada se ajusta con la ejecución (sin fillna/inf->máx. del fichero ni z-score global como en launch_all.py:98-120,150-153). Carga con header=None; sin transformación en carga.",
+    "entrenamiento": {
+     "regla": "primeras 200000 filas del stream",
+     "intervalo_ordenado": [
+      0,
+      200000
+     ],
+     "filas_mantenidas": 200000,
+     "fm_modelo": [
+      0,
+      50000
+     ],
+     "ae_modelo": [
+      50000,
+      200000
+     ],
+     "ts_primero": "2017-02-25T09:46:10.018869",
+     "ts_ultimo": "2017-02-25T09:49:04.280828",
+     "ataques_en_entrenamiento": 0,
+     "desviacion_tamano": false
+    },
+    "descartadas_por_filtro_de_etiqueta": {
+     "n": 0,
+     "types": {},
+     "ts_min": null,
+     "ts_max": null,
+     "sorted_idx_min": null,
+     "sorted_idx_max": null
+    },
+    "guarda_empates_timestamp": {
+     "n": 0,
+     "types": {}
+    },
+    "evaluacion": {
+     "inicio_ordenado": 200000,
+     "inicio_modelo": 200000,
+     "fin_modelo": 4077266,
+     "ts_primero": "2017-02-25T09:49:04.287284",
+     "ts_ultimo": "2017-02-25T10:26:54.140941",
+     "n_filas": 3877266,
+     "pct_malicioso": 37.12935867696464,
+     "tipos": {
+      "Benign": 2437662,
+      "SSDP Flood": 1439604
+     },
+     "filas_ejec_con_ts_<=_max_entrenamiento": 0,
+     "filas_de_entrenamiento_reevaluadas": 0
+    },
+    "warmup_modelo": {
+     "5": [
+      200000,
+      393863
+     ],
+     "10": [
+      200000,
+      587726
+     ],
+     "20": [
+      200000,
+      975453
+     ]
+    },
+    "warmup_pct_malicioso": {
+     "5": 0.0,
+     "10": 0.0,
+     "20": 0.0
+    },
+    "duplicados_exactos_entrenamiento_vs_ejecucion": {
+     "knad_text": {
+      "n": 0,
+      "n_attack": 0,
+      "n_same_source_row": 0,
+      "n_natural": 0
+     }
+    },
+    "flags": {},
+    "declarar": "Kitsune SSDP Flood: the AfterImage feature CSV has no header and is now read as such (the submitted code consumed the first packet as a header, which shifted features and labels by one packet). Packets are kept in capture order (pcap timestamps: 2,647 backward steps, maximum 581 us). Training uses packets [0, 200,000) (feature mapping 50,000, autoencoders 150,000); the first attack packet is at index 2,613,442, so training is attack-free according to the labels without any row-level filtering, relying on the dataset's attack-free prelude. Evaluation starts at packet 200,000: 3,877,266 packets, 37.13 % malicious. 0 evaluated rows (0 labelled as attacks) have a feature vector identical to some training row (natural duplicates; no row is duplicated by construction).",
+    "stream_index_file": "data/cache/t0/full/streams/knad_ssdp_flood__capture_order.npz"
+   }
+  },
+  "errores": {},
+  "variante_por_defecto_D7": "capture_order"
+ },
+ "knad_ssl_renegotiation": {
+  "variantes": {
+   "capture_order": {
+    "ficheros_o_dias": [
+     "SSL Renegotiation"
+    ],
+    "orden": {
+     "clave": "capture (pcap/CSV) order; AfterImage features are order-dependent and are not re-sorted",
+     "desempate_estable": "orden del fichero"
+    },
+    "filas_excluidas_antes_de_ordenar": {},
+    "columnas_eliminadas": [],
+    "preprocesado": "todo objeto ajustado (sustitución de inf/NaN, estadísticos de normalización, Feature Map, vocabularios categóricos, pesos) se ajusta SOLO con las filas de entrenamiento del stream del modelo [0, train_end); nada se ajusta con la ejecución (sin fillna/inf->máx. del fichero ni z-score global como en launch_all.py:98-120,150-153). Carga con header=None; sin transformación en carga.",
+    "entrenamiento": {
+     "regla": "primeras 200000 filas del stream",
+     "intervalo_ordenado": [
+      0,
+      200000
+     ],
+     "filas_mantenidas": 200000,
+     "fm_modelo": [
+      0,
+      50000
+     ],
+     "ae_modelo": [
+      50000,
+      200000
+     ],
+     "ts_primero": "2017-05-04T19:47:37.653090",
+     "ts_ultimo": "2017-05-04T19:50:08.809124",
+     "ataques_en_entrenamiento": 0,
+     "desviacion_tamano": false
+    },
+    "descartadas_por_filtro_de_etiqueta": {
+     "n": 0,
+     "types": {},
+     "ts_min": null,
+     "ts_max": null,
+     "sorted_idx_min": null,
+     "sorted_idx_max": null
+    },
+    "guarda_empates_timestamp": {
+     "n": 0,
+     "types": {}
+    },
+    "evaluacion": {
+     "inicio_ordenado": 200000,
+     "inicio_modelo": 200000,
+     "fin_modelo": 2207571,
+     "ts_primero": "2017-05-04T19:50:08.809546",
+     "ts_ultimo": "2017-05-04T20:26:21.717726",
+     "n_filas": 2007571,
+     "pct_malicioso": 4.615129427552002,
+     "tipos": {
+      "Benign": 1914919,
+      "SSL Renegotiation": 92652
+     },
+     "filas_ejec_con_ts_<=_max_entrenamiento": 0,
+     "filas_de_entrenamiento_reevaluadas": 0
+    },
+    "warmup_modelo": {
+     "5": [
+      200000,
+      300378
+     ],
+     "10": [
+      200000,
+      400757
+     ],
+     "20": [
+      200000,
+      601514
+     ]
+    },
+    "warmup_pct_malicioso": {
+     "5": 0.0,
+     "10": 0.0,
+     "20": 0.0
+    },
+    "duplicados_exactos_entrenamiento_vs_ejecucion": {
+     "knad_text": {
+      "n": 0,
+      "n_attack": 0,
+      "n_same_source_row": 0,
+      "n_natural": 0
+     }
+    },
+    "flags": {},
+    "declarar": "Kitsune SSL Renegotiation: the AfterImage feature CSV has no header and is now read as such (the submitted code consumed the first packet as a header, which shifted features and labels by one packet). Packets are kept in capture order (pcap timestamps: 1,970 backward steps, maximum 1,615 us). Training uses packets [0, 200,000) (feature mapping 50,000, autoencoders 150,000); the first attack packet is at index 1,320,011, so training is attack-free according to the labels without any row-level filtering, relying on the dataset's attack-free prelude. Evaluation starts at packet 200,000: 2,007,571 packets, 4.62 % malicious. 0 evaluated rows (0 labelled as attacks) have a feature vector identical to some training row (natural duplicates; no row is duplicated by construction).",
+    "stream_index_file": "data/cache/t0/full/streams/knad_ssl_renegotiation__capture_order.npz"
+   }
+  },
+  "errores": {},
+  "variante_por_defecto_D7": "capture_order"
+ },
+ "knad_video_injection": {
+  "variantes": {
+   "capture_order": {
+    "ficheros_o_dias": [
+     "Video Injection"
+    ],
+    "orden": {
+     "clave": "capture (pcap/CSV) order; AfterImage features are order-dependent and are not re-sorted",
+     "desempate_estable": "orden del fichero"
+    },
+    "filas_excluidas_antes_de_ordenar": {},
+    "columnas_eliminadas": [],
+    "preprocesado": "todo objeto ajustado (sustitución de inf/NaN, estadísticos de normalización, Feature Map, vocabularios categóricos, pesos) se ajusta SOLO con las filas de entrenamiento del stream del modelo [0, train_end); nada se ajusta con la ejecución (sin fillna/inf->máx. del fichero ni z-score global como en launch_all.py:98-120,150-153). Carga con header=None; sin transformación en carga.",
+    "entrenamiento": {
+     "regla": "primeras 200000 filas del stream",
+     "intervalo_ordenado": [
+      0,
+      200000
+     ],
+     "filas_mantenidas": 200000,
+     "fm_modelo": [
+      0,
+      50000
+     ],
+     "ae_modelo": [
+      50000,
+      200000
+     ],
+     "ts_primero": "2017-02-20T13:13:25.558628",
+     "ts_ultimo": "2017-02-20T13:16:16.165212",
+     "ataques_en_entrenamiento": 0,
+     "desviacion_tamano": false
+    },
+    "descartadas_por_filtro_de_etiqueta": {
+     "n": 0,
+     "types": {},
+     "ts_min": null,
+     "ts_max": null,
+     "sorted_idx_min": null,
+     "sorted_idx_max": null
+    },
+    "guarda_empates_timestamp": {
+     "n": 0,
+     "types": {}
+    },
+    "evaluacion": {
+     "inicio_ordenado": 200000,
+     "inicio_modelo": 200000,
+     "fin_modelo": 2472401,
+     "ts_primero": "2017-02-20T13:16:16.165401",
+     "ts_ultimo": "2017-02-20T13:48:50.620281",
+     "n_filas": 2272401,
+     "pct_malicioso": 4.5106035422445245,
+     "tipos": {
+      "Benign": 2169902,
+      "Video Injection": 102499
+     },
+     "filas_ejec_con_ts_<=_max_entrenamiento": 0,
+     "filas_de_entrenamiento_reevaluadas": 0
+    },
+    "warmup_modelo": {
+     "5": [
+      200000,
+      313620
+     ],
+     "10": [
+      200000,
+      427240
+     ],
+     "20": [
+      200000,
+      654480
+     ]
+    },
+    "warmup_pct_malicioso": {
+     "5": 0.0,
+     "10": 0.0,
+     "20": 0.0
+    },
+    "duplicados_exactos_entrenamiento_vs_ejecucion": {
+     "knad_text": {
+      "n": 0,
+      "n_attack": 0,
+      "n_same_source_row": 0,
+      "n_natural": 0
+     }
+    },
+    "flags": {},
+    "declarar": "Kitsune Video Injection: the AfterImage feature CSV has no header and is now read as such (the submitted code consumed the first packet as a header, which shifted features and labels by one packet). Packets are kept in capture order (pcap timestamps: 0 backward steps, maximum 0 us). Training uses packets [0, 200,000) (feature mapping 50,000, autoencoders 150,000); the first attack packet is at index 2,131,050, so training is attack-free according to the labels without any row-level filtering, relying on the dataset's attack-free prelude. Evaluation starts at packet 200,000: 2,272,401 packets, 4.51 % malicious. 0 evaluated rows (0 labelled as attacks) have a feature vector identical to some training row (natural duplicates; no row is duplicated by construction).",
+    "stream_index_file": "data/cache/t0/full/streams/knad_video_injection__capture_order.npz"
+   }
+  },
+  "errores": {},
+  "variante_por_defecto_D7": "capture_order"
+ }
+}
